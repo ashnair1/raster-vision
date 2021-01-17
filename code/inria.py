@@ -21,7 +21,7 @@ TRAIN_CITIES = ["austin"]
 VAL_CITIES = ["vienna"]
 
 TEST_CITIES = ["bellingham", "bloomington", "innsbruck", "sfo", "tyrol-e"]
-NUM_IMAGES_PER_CITY = 36
+NUM_IMAGES_PER_CITY = 1 #36
 
 CLASS_NAMES = ["Building"]
 CLASS_COLORS = ["red"]
@@ -97,9 +97,6 @@ def get_config(runner,
             label_store=label_store)
 
         return scene
-
-
-
 
     scene_dataset = DatasetConfig(
         class_config=class_config,
