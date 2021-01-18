@@ -23,8 +23,8 @@ VAL_CITIES = ["vienna"]
 TEST_CITIES = ["bellingham", "bloomington", "innsbruck", "sfo", "tyrol-e"]
 NUM_IMAGES_PER_CITY = 1 #36
 
-CLASS_NAMES = ["Building"]
-CLASS_COLORS = ["red"]
+CLASS_NAMES = ["background", "building"]
+CLASS_COLORS = ["white", "red"]
 
 raw_uri = "/opt/data/inria/AerialImageDataset"
 root_uri = "/opt/src/code/output"
@@ -82,7 +82,12 @@ def get_config(runner,
             uris=[raster_uri], channel_order=[0,1,2])
 
         label_source = SemanticSegmentationLabelSourceConfig(
-            raster_source=RasterioSourceConfig(uris=[label_uri]))
+            raster_source=RasterioSourceConfig(uris=[label_uri],
+            transformers=[
+                #ReclassTransformerConfig(mapping={255: 1})
+                CastTransformerConfig(to_dtype='bool'),  # 255 --> True
+                CastTransformerConfig(to_dtype='uint8')  # True --> 1
+            ]))
 
         # URI will be injected by scene config.
         # Using rgb=True because we want prediction TIFFs to be in
@@ -148,7 +153,7 @@ def get_config(runner,
         model=model,
         solver=SolverConfig(
             lr=1e-4,
-            num_epochs=10,
+            num_epochs=5,
             test_num_epochs=2,
             batch_sz=8,
             test_batch_sz=2,
